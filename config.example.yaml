@@ -1,0 +1,10 @@
+port: 80
+host: 127.0.0.1
+security:
+  # auth_type can be: null
+  auth_type: BASIC_AUTH
+  basic_auth:
+    login: admin
+    password: ''
+  # Array of IP authorised. Set as "*" for wildcard
+  ip_authorised: [127.0.0.1]
