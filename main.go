@@ -73,7 +73,7 @@ func getConfigYaml() []byte {
 	return dat
 }
 
-type Config struct {
+type ConfigStruct struct {
 	port string
 	host string
 	security struct {
@@ -86,7 +86,7 @@ type Config struct {
 }
 
 func Config() {
-	t := nil
+	t := ConfigStruct{}
 
 	data := getConfigYaml()
 	err := yaml.Unmarshal([]byte(data), &t)
@@ -129,6 +129,6 @@ func runCmd() {
 func main() {
 	fmt.Printf("hello, world\n")
 	//runCmd()
-	config()
+	Config()
 
 }
