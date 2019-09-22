@@ -1,6 +1,6 @@
+# HTTP-RUNNER
 
-
-HTTP-RUNNER permet de lancer des commandes unix depuis une API http.
+Permet de lancer des commandes unix depuis une API http.
 
 ## Installation
 ```
@@ -28,13 +28,13 @@ Restart the service after editing :
 service http-runner restart
 ```
 
-## Add script
+## Add your scripts
 
 Add your own scripts in the `~/.http-runner/scripts` folder.
 
 Call your script from HTTP with her file name. Example : `http://localhost/api/call/go.sh` will call `~/.http-server/scripts/go.sh`
 
-## Logs
+## Logs
 
 Logs are generated into the `~/.http-runner/logs` folder.
 
@@ -43,6 +43,6 @@ There are organised like so :
 
 You can access from the HTTP api on /api/logs/<script_name>/<file.log>
 
-## Web interface
+## Web interface
 
 You can access to the web interface on http://localhost/admin
