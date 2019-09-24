@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/subtle"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
@@ -33,6 +34,43 @@ func Server() {
 
 		_, _ = fmt.Fprintf(w, "Script %v started.\n", vars["id"])
 		w.WriteHeader(http.StatusOK)
+	})
+
+	r.HandleFunc("/api/logs/{id}/{file}", func (w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+		file := vars["file"]
+
+		if !ScriptExists(id) {
+			w.WriteHeader(http.StatusNotFound)
+			_, _ = fmt.Fprintf(w, "Script %v not exists\n", vars["id"])
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+
+		content := ContentLogFile(id, file)
+		_, _ = w.Write(content)
+
+	})
+
+	r.HandleFunc("/api/logs/{id}", func (w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+
+		if !ScriptExists(id) {
+			w.WriteHeader(http.StatusNotFound)
+			_, _ = fmt.Fprintf(w, "Script %v not exists\n", vars["id"])
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+
+		list := ListLogFiles(id)
+		json, _ := json.Marshal(list)
+
+		_, _ = w.Write(json)
+
 	})
 
 	if config.Security.Auth_type == "BASIC_AUTH" {

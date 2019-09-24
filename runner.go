@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -36,6 +38,21 @@ func RunScript(id string) {
 	_ = cmd.Wait()
 
 	log.Println("RunScript " + id + " finished.")
+}
+
+func ListLogFiles(id string) []string {
+	var list []string
+	files, _ := ioutil.ReadDir(logsFolder + "/" + id)
+	for _, f := range files {
+		fmt.Println(f.Name())
+		list = append(list, f.Name())
+	}
+	return list
+}
+
+func ContentLogFile(id string, file string) []byte {
+	data, _ := ioutil.ReadFile(logsFolder + "/" + id + "/" + file)
+	return data
 }
 
 func ScriptExists(id string) bool {
