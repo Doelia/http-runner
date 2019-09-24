@@ -36,7 +36,7 @@ service http-runner restart
 
 ## Logs
 
-Logs are generated into the `~/.http-runner/logs` folder.
+Logs are written into the `~/.http-runner/logs` folder.
 
 There are organised like so :
 ```./logs/<script_name>/YYYY-MM-DD_HH-MM-SS.log```
@@ -46,3 +46,7 @@ You can access from the HTTP api on `/api/logs/<script_name>/<file.log>`
 ## Web interface
 
 A web interface is available on http://localhost/admin
+
+## Development
+
+This project use [dep](https://github.com/golang/dep) for dependencies
