@@ -6,30 +6,8 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"strings"
 )
-
-func BasicAuth(username, password, realm string) mux.MiddlewareFunc {
-
-	return func (next http.Handler) http.Handler {
-
-			return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
-
-			user, pass, ok := r.BasicAuth()
-
-			if !ok || subtle.ConstantTimeCompare([]byte(user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(pass), []byte(password)) != 1{
-				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
-				w.WriteHeader(401)
-				w.Write([]byte("Unauthorised.\n"))
-				return
-			}
-
-			// Do stuff here
-			log.Println(r.RequestURI)
-			// Call the next handler, which can be another middleware in the chain, or the final handler.
-			next.ServeHTTP(w, r)
-		})
-	}
-}
 
 func Server() {
 
@@ -58,7 +36,11 @@ func Server() {
 	})
 
 	if config.Security.Auth_type == "BASIC_AUTH" {
-		r.Use(BasicAuth(config.Security.Basic_auth.Login, config.Security.Basic_auth.Password, "http-runner auth"))
+		r.Use(basicAuthMiddleware(config.Security.Basic_auth.Login, config.Security.Basic_auth.Password, "http-runner auth"))
+	}
+
+	if len(config.Security.Ip_authorised) > 0 {
+		r.Use(testIpMiddleware(config.Security.Ip_authorised))
 	}
 
 	http.Handle("/", r)
@@ -71,3 +53,44 @@ func Server() {
 
 }
 
+func basicAuthMiddleware(username, password, realm string) mux.MiddlewareFunc {
+
+	return func (next http.Handler) http.Handler {
+
+		return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
+
+			user, pass, ok := r.BasicAuth()
+
+			if !ok || subtle.ConstantTimeCompare([]byte(user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(pass), []byte(password)) != 1{
+				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
+				w.WriteHeader(401)
+				w.Write([]byte("Unauthorised.\n"))
+				return
+			}
+
+			log.Println(r.RequestURI)
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func testIpMiddleware(ipAuthorised []string) mux.MiddlewareFunc {
+
+	return func (next http.Handler) http.Handler {
+
+		return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
+
+			clientIp := strings.Split(r.RemoteAddr, ":")[0]
+
+			if !ArrayContains(ipAuthorised, clientIp) {
+				log.Println("Unautorised IP connexion : " + clientIp)
+				w.WriteHeader(401)
+				w.Write([]byte("IP Unauthorised.\n"))
+				return
+			}
+
+			log.Println(r.RequestURI)
+			next.ServeHTTP(w, r)
+		})
+	}
+}
