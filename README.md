@@ -4,8 +4,7 @@ Launch custom SH scripts from an HTTP api.
 
 ## Installation
 ```
-apt install http-runner
-service http-runner start
+Soon
 ```
 
 ## Usage
