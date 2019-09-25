@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"strings"
 )
@@ -116,6 +117,25 @@ func basicAuthMiddleware(username, password, realm string) mux.MiddlewareFunc {
 	}
 }
 
+func testIp(ipAuthorised []string, ip string) bool {
+	ipToTest := net.ParseIP(ip)
+	fmt.Println(ipToTest)
+	for _, ipMask := range ipAuthorised {
+		if strings.Contains(ipMask, "/") {
+			_, ipNetMask, _ := net.ParseCIDR(ipMask)
+			fmt.Println(ipNetMask)
+			if ipNetMask.Contains(ipToTest) {
+				return true
+			}
+		} else {
+			if ipMask == ip {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func testIpMiddleware(ipAuthorised []string) mux.MiddlewareFunc {
 
 	return func (next http.Handler) http.Handler {
@@ -124,7 +144,7 @@ func testIpMiddleware(ipAuthorised []string) mux.MiddlewareFunc {
 
 			clientIp := strings.Split(r.RemoteAddr, ":")[0]
 
-			if !ArrayContains(ipAuthorised, clientIp) {
+			if !testIp(ipAuthorised, clientIp) {
 				log.Println("Unautorised IP connexion : " + clientIp)
 				w.WriteHeader(401)
 				w.Write([]byte("IP Unauthorised.\n"))
