@@ -30,9 +30,11 @@ func Server() {
 			return
 		}
 
-		go RunScript(id)
+		logname := CreateLog(id)
+		go RunScript(id, logname)
 
-		_, _ = fmt.Fprintf(w, "Script %v started.\n", vars["id"])
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprintf(w, "{\"started\": true, \"logs\": \"%s\", \"logs_entrypoint\": \"/api/logs/%s/%s\"}", logname, id, logname)
 		w.WriteHeader(http.StatusOK)
 	})
 

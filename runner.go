@@ -12,19 +12,21 @@ import (
 var scriptsFolder = HOME_FOLDER + "/scripts"
 var logsFolder = HOME_FOLDER + "/logs"
 
-func RunScript(id string) {
+func CreateLog(id string) string {
+	// open the out file for writing
+	_ = os.MkdirAll(logsFolder + "/" + id, os.ModePerm)
+
+	now := time.Now()
+	return now.Format("2006-01-02_15-04-5") + ".log"
+}
+
+func RunScript(id string, logname string) {
 	log.Println("RunScript " + id + "...")
 
 	path := scriptsFolder + "/" + id
 	cmd := exec.Command("/bin/sh", path)
 
-	// open the out file for writing
-	_ = os.MkdirAll(logsFolder + "/" + id, os.ModePerm)
-
-	now := time.Now()
-	filename := now.Format("2006-01-02_15-04-5") + ".log"
-
-	outfile, err := os.Create(logsFolder + "/" + id + "/" + filename)
+	outfile, err := os.Create(logsFolder + "/" + id + "/" + logname)
 	if err != nil {
 		panic(err)
 	}
