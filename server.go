@@ -119,11 +119,9 @@ func basicAuthMiddleware(username, password, realm string) mux.MiddlewareFunc {
 
 func testIp(ipAuthorised []string, ip string) bool {
 	ipToTest := net.ParseIP(ip)
-	fmt.Println(ipToTest)
 	for _, ipMask := range ipAuthorised {
 		if strings.Contains(ipMask, "/") {
 			_, ipNetMask, _ := net.ParseCIDR(ipMask)
-			fmt.Println(ipNetMask)
 			if ipNetMask.Contains(ipToTest) {
 				return true
 			}
