@@ -26,7 +26,7 @@ security:
   basic_auth:
     login: admin
     password: ''
-  # Array of IP authorised. Set as "*" for wildcard
+  # Array of IP authorised. Set as "*" for wildcard. You can use mask IP
   ip_authorised: [127.0.0.1]
 ```
 
@@ -51,3 +51,7 @@ A web interface is available on http://localhost/admin
 ## Development
 
 This project use [dep](https://github.com/golang/dep) for dependencies
+
+## TODO
+- Queue system
+- Reluanch scripts
