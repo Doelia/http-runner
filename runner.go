@@ -20,11 +20,11 @@ func CreateLog(id string) string {
 	return now.Format("2006-01-02_15-04-5") + ".log"
 }
 
-func RunScript(id string, logname string) {
+func RunScript(id string, logname string, getsParam string, rawParam string) {
 	log.Println("RunScript " + id + "...")
 
 	path := scriptsFolder + "/" + id
-	cmd := exec.Command("/bin/sh", path)
+	cmd := exec.Command("/bin/sh", path, getsParam, rawParam)
 
 	outfile, err := os.Create(logsFolder + "/" + id + "/" + logname)
 	if err != nil {

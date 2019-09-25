@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -31,7 +32,8 @@ func Server() {
 		}
 
 		logname := CreateLog(id)
-		go RunScript(id, logname)
+		body, _ := ioutil.ReadAll(r.Body)
+		go RunScript(id, logname, "", string(body))
 
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = fmt.Fprintf(w, "{\"started\": true, \"logs\": \"%s\", \"logs_entrypoint\": \"/api/logs/%s/%s\"}", logname, id, logname)

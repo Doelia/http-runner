@@ -13,6 +13,8 @@ Add your own scripts in the `~/.http-runner/scripts` folder.
 
 Call your script from HTTP with her file name. Example : `http://localhost/api/run/go.sh` will call `~/.http-server/scripts/go.sh`
 
+GET parameters are passed as $1 and BODY as $2
+
 ## Configuration
 Edit `~/.http-runner/config.yaml` :
 ```
