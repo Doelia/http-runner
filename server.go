@@ -52,6 +52,7 @@ func Server() {
 			return
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusOK)
 
 		content := ContentLogFile(id, file)
