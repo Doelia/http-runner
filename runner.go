@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"os/exec"
+	"strconv"
 	"time"
 )
 
@@ -17,7 +19,7 @@ func CreateLog(id string) string {
 	_ = os.MkdirAll(logsFolder + "/" + id, os.ModePerm)
 
 	now := time.Now()
-	return now.Format("2006-01-02_15-04-5") + ".log"
+	return now.Format("2006-01-02_15-04-5") + strconv.Itoa(rand.Intn(10000)) + ".log"
 }
 
 func RunScript(id string, logname string, getsParam string, rawParam string) {
