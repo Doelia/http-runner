@@ -26,7 +26,7 @@ func RunScript(id string, logname string, getsParam string, rawParam string) {
 	log.Println("RunScript " + id + "...")
 
 	path := scriptsFolder + "/" + id
-	cmd := exec.Command("/bin/sh", path, getsParam, rawParam, logname)
+	cmd := exec.Command("/bin/bash", path, getsParam, rawParam, logname)
 
 	outfile, err := os.Create(logsFolder + "/" + id + "/" + logname)
 	if err != nil {
