@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -42,6 +43,17 @@ func RunScript(id string, logname string, getsParam string, rawParam string) {
 	_ = cmd.Wait()
 
 	log.Println("RunScript " + id + " finished.")
+}
+
+func RunCmd(cmd string) string {
+	log.Println("RunCmd " + cmd + "...")
+	args := strings.Split(cmd, " ")
+	out, err := exec.Command(args[0], args[1:]...).Output()
+	if err != nil {
+		return err.Error()
+	}
+	log.Println("RunCmd Output: " + string(out))
+	return string(out)
 }
 
 func ListLogFiles(id string) []string {

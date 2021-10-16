@@ -41,6 +41,16 @@ func Server() {
 		w.WriteHeader(http.StatusOK)
 	})
 
+	r.HandleFunc("/api/cmd", func (w http.ResponseWriter, r *http.Request) {
+
+		body, _ := ioutil.ReadAll(r.Body)
+		out := RunCmd(string(body))
+
+		w.Header().Set("Content-Type", "text")
+		_, _ = fmt.Fprintf(w, out)
+		w.WriteHeader(http.StatusOK)
+	})
+
 	r.HandleFunc("/api/logs/{id}/{file}", func (w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
