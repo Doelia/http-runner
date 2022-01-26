@@ -4,7 +4,25 @@ Launch custom SH scripts from an HTTP api.
 
 ## Installation
 ```
-Soon
+dep ensure
+go build
+go install
+```
+
+Create a `/etc/systemd/system/http-runner.service` service :
+```
+[Unit]
+Description=Http Runner
+After=network.target
+
+[Service]
+Environment=HOME=/root
+Type=simple
+ExecStart=/root/go/bin/http-runner
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
 ```
 
 ## Usage
